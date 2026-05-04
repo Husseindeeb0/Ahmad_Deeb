@@ -1,0 +1,160 @@
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Play, Pause, Mic2, Volume2 } from 'lucide-react';
+
+interface VoiceClip {
+  id: number;
+  title: string;
+  duration: string;
+  seconds: number;
+  url: string;
+}
+
+const clips: VoiceClip[] = [
+  { id: 1, title: 'شعر الشهيد', duration: '٠:١٨', seconds: 18, url: '/sounds/music.mp3' },
+  { id: 2, title: 'سلام على الامام علي(ع)', duration: '٠:١٨', seconds: 18, url: '/sounds/music2.mp3' },
+  { id: 3, title: 'سلام على ابا فضل العباس(ع)', duration: '٠:٠٥', seconds: 5, url: '/sounds/music3.mp3' },
+  { id: 4, title: 'مناجاة بأبا فضل العباس(ع)', duration: '٠:٠٨', seconds: 8, url: '/sounds/music4.mp3' },
+  { id: 5, title: 'صلاة على النبي(ص)', duration: '٠:٠٤', seconds: 4, url: '/sounds/music5.mp3' },
+];
+
+export default function VoiceClips() {
+  const [playingId, setPlayingId] = useState<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const togglePlay = (clip: VoiceClip) => {
+    if (playingId === clip.id) {
+      audioRef.current?.pause();
+      setPlayingId(null);
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = clip.url;
+        audioRef.current.load();
+        audioRef.current.play().catch(error => {
+          console.error("Error playing audio:", error);
+        });
+      }
+      setPlayingId(clip.id);
+    }
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      const handleEnded = () => setPlayingId(null);
+      audio.addEventListener('ended', handleEnded);
+      return () => audio.removeEventListener('ended', handleEnded);
+    }
+  }, []);
+
+  return (
+    <section className="py-24 bg-memorial-dark relative overflow-hidden">
+      {/* Decorative background element */}
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-memorial-yellow/5 rounded-full blur-[120px] pointer-events-none" />
+      
+      <div className="max-w-5xl mx-auto px-6 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-memorial-yellow/10 border border-memorial-yellow/20 mb-6">
+            <Mic2 size={14} className="text-memorial-yellow" />
+            <span className="text-[10px] uppercase tracking-widest text-memorial-yellow font-cairo">تسجيلات صوتية</span>
+          </div>
+          <h2 className="text-3xl md:text-5xl font-amiri text-white mb-4">كلمات باقية بصوته</h2>
+          <div className="w-16 h-px bg-memorial-yellow/50 mx-auto"></div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {clips.map((clip, idx) => (
+            <motion.div
+              key={clip.id}
+              initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: idx * 0.1 }}
+              className={`relative group p-6 rounded-2xl border transition-all duration-500 ${
+                playingId === clip.id 
+                ? 'bg-memorial-yellow/10 border-memorial-yellow/40 shadow-[0_0_30px_rgba(212,175,55,0.1)]' 
+                : 'bg-memorial-black/40 border-white/5 hover:border-white/10 hover:bg-memorial-black/60'
+              }`}
+            >
+              <div className="flex items-center gap-6">
+                {/* Play Button */}
+                <button
+                  onClick={() => togglePlay(clip)}
+                  className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 ${
+                    playingId === clip.id
+                    ? 'bg-memorial-yellow text-memorial-black'
+                    : 'bg-white/5 text-white group-hover:bg-memorial-yellow/20 group-hover:text-memorial-yellow'
+                  }`}
+                >
+                  {playingId === clip.id ? <Pause fill="currentColor" size={24} /> : <Play fill="currentColor" className="ml-1" size={24} />}
+                </button>
+
+                <div className="flex-1 min-w-0 text-right">
+                  <h3 className={`text-lg md:text-xl font-amiri mb-1 transition-colors ${playingId === clip.id ? 'text-memorial-yellow' : 'text-white'}`}>
+                    {clip.title}
+                  </h3>
+                  <div className="flex items-center justify-end gap-3 text-xs text-gray-500 font-cairo">
+                    <span>{clip.duration}</span>
+                    <Volume2 size={12} className={playingId === clip.id ? 'text-memorial-yellow' : ''} />
+                  </div>
+                </div>
+
+                {/* Animated Waveform (Only visible when playing) */}
+                <AnimatePresence>
+                  {playingId === clip.id && (
+                    <motion.div 
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: 'auto' }}
+                      exit={{ opacity: 0, width: 0 }}
+                      className="flex items-end gap-1 h-8"
+                    >
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <motion.div
+                          key={i}
+                          animate={{ 
+                            height: [8, 24, 12, 32, 8],
+                          }}
+                          transition={{ 
+                            duration: 0.8, 
+                            repeat: Infinity, 
+                            delay: i * 0.1,
+                            ease: "easeInOut"
+                          }}
+                          className="w-1 bg-memorial-yellow rounded-full"
+                        />
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Progress bar background (Subtle) */}
+              {playingId === clip.id && (
+                <motion.div 
+                  layoutId="progress"
+                  className="absolute bottom-0 right-0 left-0 h-1 bg-memorial-yellow/20 overflow-hidden rounded-b-2xl"
+                >
+                  <motion.div 
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: clip.seconds, ease: "linear" }}
+                    className="w-full h-full bg-memorial-yellow origin-right"
+                  />
+                </motion.div>
+              )}
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Hidden Global Audio Element for Clips */}
+        <audio ref={audioRef} hidden />
+      </div>
+    </section>
+  );
+}
