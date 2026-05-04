@@ -26,14 +26,14 @@ export default function TributeFooter() {
           </h3>
           
           <p className="text-gray-500 font-cairo text-sm md:text-base leading-loose max-w-lg mx-auto mb-12">
-            تم إنشاء هذا المزار الرقمي تخليداً لذكرى الشهيد أحمد ديب. 
+            تم إنشاء هذا المزار الرقمي تخليداً لذكرى الشهيد أحمد ذيب. 
             نسأل الله أن يتغمده بواسع رحمته ويسكنه فسيح جناته.
           </p>
 
           <div className="flex flex-col items-center gap-6">
              <div className="w-12 h-px bg-white/10" />
              <div className="text-[10px] uppercase tracking-[0.2em] text-gray-600 font-cairo">
-               ٢٠٢٤ - مزار الشهيد أحمد ديب الرقمي
+               ٢٠٢٦ - مزار الشهيد أحمد ذيب الرقمي
              </div>
           </div>
         </motion.div>

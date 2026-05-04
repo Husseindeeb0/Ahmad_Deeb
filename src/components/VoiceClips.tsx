@@ -11,11 +11,12 @@ interface VoiceClip {
 }
 
 const clips: VoiceClip[] = [
-  { id: 1, title: 'شعر الشهيد', duration: '٠:١٨', seconds: 18, url: '/sounds/music.mp3' },
-  { id: 2, title: 'سلام على الامام علي(ع)', duration: '٠:١٨', seconds: 18, url: '/sounds/music2.mp3' },
-  { id: 3, title: 'سلام على ابا فضل العباس(ع)', duration: '٠:٠٥', seconds: 5, url: '/sounds/music3.mp3' },
-  { id: 4, title: 'مناجاة بأبا فضل العباس(ع)', duration: '٠:٠٨', seconds: 8, url: '/sounds/music4.mp3' },
-  { id: 5, title: 'صلاة على النبي(ص)', duration: '٠:٠٤', seconds: 4, url: '/sounds/music5.mp3' },
+  { id: 1, title: 'دعاء كميل بصوت الشهيد', duration: '٢:١٩', seconds: 139, url: '/sounds/music6.mp3' },
+  { id: 2, title: 'شعر الشهيد', duration: '٠:١٨', seconds: 18, url: '/sounds/music.mp3' },
+  { id: 3, title: 'سلام على الامام علي(ع)', duration: '٠:١٨', seconds: 18, url: '/sounds/music2.mp3' },
+  { id: 4, title: 'سلام على ابا فضل العباس(ع)', duration: '٠:٠٥', seconds: 5, url: '/sounds/music3.mp3' },
+  { id: 5, title: 'مناجاة بأبا فضل العباس(ع)', duration: '٠:٠٨', seconds: 8, url: '/sounds/music4.mp3' },
+  { id: 6, title: 'صلاة على النبي(ص)', duration: '٠:٠٤', seconds: 4, url: '/sounds/music5.mp3' },
 ];
 
 export default function VoiceClips() {
@@ -64,7 +65,7 @@ export default function VoiceClips() {
             <Mic2 size={14} className="text-memorial-yellow" />
             <span className="text-[10px] uppercase tracking-widest text-memorial-yellow font-cairo">تسجيلات صوتية</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-amiri text-white mb-4">كلمات باقية بصوته</h2>
+          <h2 className="text-3xl md:text-5xl font-amiri text-white mb-4">عبارات بصوت الشهيد</h2>
           <div className="w-16 h-px bg-memorial-yellow/50 mx-auto"></div>
         </motion.div>
 
