@@ -11,11 +11,11 @@ interface VoiceClip {
 }
 
 const clips: VoiceClip[] = [
-  { id: 1, title: 'دعاء كميل بصوت الشهيد', duration: '٢:١٩', seconds: 139, url: '/sounds/music6.mp3' },
+  { id: 1, title: 'اخر مقطع من دعاء كميل بصوت الشهيد', duration: '٢:١٩', seconds: 139, url: '/sounds/music6.mp3' },
   { id: 2, title: 'شعر الشهيد', duration: '٠:١٨', seconds: 18, url: '/sounds/music.mp3' },
   { id: 3, title: 'سلام على الامام علي(ع)', duration: '٠:١٨', seconds: 18, url: '/sounds/music2.mp3' },
-  { id: 4, title: 'سلام على ابا فضل العباس(ع)', duration: '٠:٠٥', seconds: 5, url: '/sounds/music3.mp3' },
-  { id: 5, title: 'مناجاة بأبا فضل العباس(ع)', duration: '٠:٠٨', seconds: 8, url: '/sounds/music4.mp3' },
+  { id: 4, title: 'سلام على ابي فضل العباس(ع)', duration: '٠:٠٥', seconds: 5, url: '/sounds/music3.mp3' },
+  { id: 5, title: 'مناجاة بأبي فضل العباس(ع)', duration: '٠:٠٨', seconds: 8, url: '/sounds/music4.mp3' },
   { id: 6, title: 'صلاة على النبي(ص)', duration: '٠:٠٤', seconds: 4, url: '/sounds/music5.mp3' },
 ];
 

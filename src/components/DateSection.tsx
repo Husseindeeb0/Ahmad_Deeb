@@ -16,17 +16,41 @@ export default function DateSection() {
           
           <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 w-full">
 
-            <div className="flex flex-col items-center">
-              <span className="text-sm tracking-widest text-gray-500 uppercase mb-2">تاريخ الولادة</span>
-              <span className="text-3xl md:text-5xl font-amiri text-white">١ فبراير ١٩٧٧</span>
+            <div className="flex flex-col items-center gap-6">
+              <div className="flex flex-col items-center">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-4">تاريخ الولادة</span>
+                <div className="space-y-4">
+                  <div className="flex flex-col items-center">
+                    <span className="text-[10px] text-memorial-yellow/40 uppercase tracking-widest mb-1 font-cairo">ميلادي</span>
+                    <span className="text-3xl md:text-5xl font-amiri text-white">١ فبراير ١٩٧٧</span>
+                  </div>
+                  <div className="w-8 h-px bg-white/5 mx-auto" />
+                  <div className="flex flex-col items-center">
+                    <span className="text-[10px] text-memorial-yellow/40 uppercase tracking-widest mb-1 font-cairo">هجري</span>
+                    <span className="text-2xl md:text-4xl font-amiri text-white/60">١٣ صفر ١٣٩٧ هـ.</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="hidden md:block w-px h-24 bg-memorial-green/50"></div>
-            <div className="md:hidden w-24 h-px bg-memorial-green/50"></div>
+            <div className="hidden md:block w-px h-32 bg-gradient-to-b from-transparent via-memorial-green/50 to-transparent"></div>
+            <div className="md:hidden w-32 h-px bg-gradient-to-r from-transparent via-memorial-green/50 to-transparent my-4"></div>
 
-            <div className="flex flex-col items-center">
-              <span className="text-sm tracking-widest text-gray-500 uppercase mb-2">تاريخ الاستشهاد</span>
-              <span className="text-3xl md:text-5xl font-amiri text-memorial-yellow">٩ مارس ٢٠٢٦</span>
+            <div className="flex flex-col items-center gap-6">
+              <div className="flex flex-col items-center">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-4">تاريخ الاستشهاد</span>
+                <div className="space-y-4">
+                  <div className="flex flex-col items-center">
+                    <span className="text-[10px] text-memorial-yellow/40 uppercase tracking-widest mb-1 font-cairo">ميلادي</span>
+                    <span className="text-3xl md:text-5xl font-amiri text-memorial-yellow">٩ مارس ٢٠٢٦</span>
+                  </div>
+                  <div className="w-8 h-px bg-memorial-yellow/10 mx-auto" />
+                  <div className="flex flex-col items-center">
+                    <span className="text-[10px] text-memorial-yellow/40 uppercase tracking-widest mb-1 font-cairo">هجري</span>
+                    <span className="text-2xl md:text-4xl font-amiri text-memorial-yellow/60">١٩ رمضان ١٤٤٧ هـ.</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
           </div>
