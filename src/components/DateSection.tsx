@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 export default function DateSection() {
   return (
-    <section className="py-24 relative overflow-hidden bg-gradient-to-b from-memorial-black to-memorial-dark">
+    <section id="dates" className="py-24 relative overflow-hidden bg-gradient-to-b from-memorial-black to-memorial-dark">
       <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

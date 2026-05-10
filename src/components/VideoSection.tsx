@@ -44,7 +44,7 @@ export default function VideoSection() {
   };
 
   return (
-    <section className="py-24 bg-memorial-black relative">
+    <section id="videos" className="py-24 bg-memorial-black relative">
       <div className="max-w-6xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

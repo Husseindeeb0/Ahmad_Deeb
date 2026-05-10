@@ -11,6 +11,7 @@ import VideoSection from './components/VideoSection.tsx';
 import VoiceClips from './components/VoiceClips.tsx';
 import InfiniteMarqueeGallery from './components/InfiniteMarqueeGallery.tsx';
 import TributeFooter from './components/TributeFooter.tsx';
+import Navbar from './components/Navbar.tsx';
 
 function App() {
   const [hasEntered, setHasEntered] = useState(false);
@@ -26,6 +27,7 @@ function App() {
       
       {hasEntered && (
         <>
+          <Navbar />
           <AudioPlayer />
           <main>
             <Hero />

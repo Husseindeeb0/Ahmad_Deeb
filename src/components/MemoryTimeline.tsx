@@ -187,6 +187,7 @@ export default function MemoryTimeline() {
 
   return (
     <section
+      id="timeline"
       ref={containerRef}
       className="relative py-24 bg-memorial-black overflow-hidden"
     >

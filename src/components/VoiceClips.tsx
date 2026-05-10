@@ -97,7 +97,7 @@ export default function VoiceClips() {
   };
 
   return (
-    <section className="py-24 bg-memorial-dark relative overflow-hidden">
+    <section id="audios" className="py-24 bg-memorial-dark relative overflow-hidden">
       {/* Decorative background element */}
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-memorial-yellow/5 rounded-full blur-[120px] pointer-events-none" />
       

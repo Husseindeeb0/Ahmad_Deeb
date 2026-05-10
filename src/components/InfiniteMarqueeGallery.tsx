@@ -39,7 +39,7 @@ export default function InfiniteMarqueeGallery() {
   };
 
   return (
-    <section className="py-24 bg-memorial-black overflow-hidden relative min-h-[600px] flex flex-col items-center justify-center">
+    <section id="gallery" className="py-24 bg-memorial-black overflow-hidden relative min-h-[600px] flex flex-col items-center justify-center">
       <div className="max-w-7xl mx-auto px-6 mb-16 text-center relative z-10">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
