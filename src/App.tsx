@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { pageview } from './lib/analytics';
 import OpeningOverlay from './components/OpeningOverlay.tsx';
 import Bubbles from './components/Bubbles.tsx';
 import Hero from './components/Hero.tsx';
@@ -13,6 +14,10 @@ import TributeFooter from './components/TributeFooter.tsx';
 
 function App() {
   const [hasEntered, setHasEntered] = useState(false);
+
+  useEffect(() => {
+    pageview(window.location.pathname);
+  }, []);
 
   return (
     <div className="relative bg-memorial-black min-h-screen text-white font-cairo">

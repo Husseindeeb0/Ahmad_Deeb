@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X } from "lucide-react";
+import { event } from "../lib/analytics";
 
 const videos = [
   {
@@ -33,6 +34,15 @@ const videos = [
 export default function VideoSection() {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
+  const handleVideoSelect = (url: string) => {
+    setSelectedVideo(url);
+    event({
+      action: 'play_video',
+      category: 'Video',
+      label: url.split('/').pop() || url
+    });
+  };
+
   return (
     <section className="py-24 bg-memorial-black relative">
       <div className="max-w-6xl mx-auto px-6">
@@ -57,7 +67,7 @@ export default function VideoSection() {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1, delay: idx * 0.3 }}
               className="relative group rounded-3xl overflow-hidden cursor-pointer aspect-video shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/5"
-              onClick={() => vid.url && setSelectedVideo(vid.url)}
+              onClick={() => vid.url && handleVideoSelect(vid.url)}
             >
               {/* Video Thumbnail (First Frame) */}
               <video

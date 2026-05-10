@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Mic2, Volume2 } from 'lucide-react';
+import { event } from '../lib/analytics';
 
 interface VoiceClip {
   id: number;
@@ -34,6 +35,13 @@ export default function VoiceClips() {
         audioRef.current.load();
         audioRef.current.play().catch(error => {
           console.error("Error playing audio:", error);
+        });
+
+        // Track play event
+        event({
+          action: 'play_voice_clip',
+          category: 'Audio',
+          label: clip.title
         });
       }
       setPlayingId(clip.id);

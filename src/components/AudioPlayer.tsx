@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, Music, ListMusic } from 'lucide-react';
+import { event } from '../lib/analytics';
 
 const tracks = [
   { id: 1, name: 'موسيقى الخلفية', url: '/music.mp3' },
@@ -33,8 +34,10 @@ export default function AudioPlayer() {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
+        event({ action: 'pause_bg_music', category: 'Audio', label: tracks[currentTrackIdx].name });
       } else {
         audioRef.current.play();
+        event({ action: 'play_bg_music', category: 'Audio', label: tracks[currentTrackIdx].name });
       }
       setIsPlaying(!isPlaying);
     }
@@ -42,17 +45,20 @@ export default function AudioPlayer() {
 
   const toggleMute = () => {
     setIsMuted(!isMuted);
+    event({ action: 'toggle_mute', category: 'Audio', label: !isMuted ? 'Muted' : 'Unmuted' });
   };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVolume(parseFloat(e.target.value));
-    if (parseFloat(e.target.value) > 0) setIsMuted(false);
+    const val = parseFloat(e.target.value);
+    setVolume(val);
+    if (val > 0) setIsMuted(false);
   };
 
   const selectTrack = (idx: number) => {
     setCurrentTrackIdx(idx);
     setIsPlaying(true);
     setShowTracks(false);
+    event({ action: 'select_bg_track', category: 'Audio', label: tracks[idx].name });
   };
 
   return (
