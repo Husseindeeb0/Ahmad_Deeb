@@ -22,19 +22,28 @@ const clips: VoiceClip[] = [
 
 export default function VoiceClips() {
   const [playingId, setPlayingId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const togglePlay = (clip: VoiceClip) => {
     if (playingId === clip.id) {
-      audioRef.current?.pause();
-      setPlayingId(null);
+      if (audioRef.current?.paused) {
+        audioRef.current.play();
+      } else {
+        audioRef.current?.pause();
+        setPlayingId(null);
+      }
     } else {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = clip.url;
         audioRef.current.load();
+        setIsLoading(true);
         audioRef.current.play().catch(error => {
           console.error("Error playing audio:", error);
+          setIsLoading(false);
         });
 
         // Track play event
@@ -50,12 +59,42 @@ export default function VoiceClips() {
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (audio) {
-      const handleEnded = () => setPlayingId(null);
-      audio.addEventListener('ended', handleEnded);
-      return () => audio.removeEventListener('ended', handleEnded);
-    }
+    if (!audio) return;
+
+    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const handleLoadedMetadata = () => setDuration(audio.duration);
+    const handleWaiting = () => setIsLoading(true);
+    const handlePlaying = () => setIsLoading(false);
+    const handleEnded = () => {
+      setPlayingId(null);
+      setCurrentTime(0);
+    };
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('waiting', handleWaiting);
+    audio.addEventListener('playing', handlePlaying);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('waiting', handleWaiting);
+      audio.removeEventListener('playing', handlePlaying);
+      audio.removeEventListener('ended', handleEnded);
+    };
   }, []);
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>, clipId: number) => {
+    if (playingId !== clipId || !audioRef.current || duration === 0) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = (rect.width - x) / rect.width;
+    const seekTime = Math.max(0, Math.min(percentage * duration, duration));
+    
+    audioRef.current.currentTime = seekTime;
+  };
 
   return (
     <section className="py-24 bg-memorial-dark relative overflow-hidden">
@@ -85,23 +124,31 @@ export default function VoiceClips() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: idx * 0.1 }}
-              className={`relative group p-6 rounded-2xl border transition-all duration-500 ${
+              className={`relative group p-6 rounded-2xl border transition-all duration-500 overflow-hidden ${
                 playingId === clip.id 
                 ? 'bg-memorial-yellow/10 border-memorial-yellow/40 shadow-[0_0_30px_rgba(212,175,55,0.1)]' 
                 : 'bg-memorial-black/40 border-white/5 hover:border-white/10 hover:bg-memorial-black/60'
               }`}
             >
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-6 relative z-10 pb-4">
                 {/* Play Button */}
                 <button
                   onClick={() => togglePlay(clip)}
-                  className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 ${
+                  className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 relative ${
                     playingId === clip.id
                     ? 'bg-memorial-yellow text-memorial-black'
                     : 'bg-white/5 text-white group-hover:bg-memorial-yellow/20 group-hover:text-memorial-yellow'
                   }`}
                 >
-                  {playingId === clip.id ? <Pause fill="currentColor" size={24} /> : <Play fill="currentColor" className="ml-1" size={24} />}
+                  {isLoading && playingId === clip.id ? (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="w-6 h-6 border-2 border-memorial-black border-t-transparent rounded-full"
+                    />
+                  ) : (
+                    playingId === clip.id ? <Pause fill="currentColor" size={24} /> : <Play fill="currentColor" className="ml-1" size={24} />
+                  )}
                 </button>
 
                 <div className="flex-1 min-w-0 text-right">
@@ -116,7 +163,7 @@ export default function VoiceClips() {
 
                 {/* Animated Waveform (Only visible when playing) */}
                 <AnimatePresence>
-                  {playingId === clip.id && (
+                  {playingId === clip.id && !isLoading && (
                     <motion.div 
                       initial={{ opacity: 0, width: 0 }}
                       animate={{ opacity: 1, width: 'auto' }}
@@ -143,26 +190,29 @@ export default function VoiceClips() {
                 </AnimatePresence>
               </div>
 
-              {/* Progress bar background (Subtle) */}
-              {playingId === clip.id && (
-                <motion.div 
-                  layoutId="progress"
-                  className="absolute bottom-0 right-0 left-0 h-1 bg-memorial-yellow/20 overflow-hidden rounded-b-2xl"
-                >
-                  <motion.div 
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ duration: clip.seconds, ease: "linear" }}
-                    className="w-full h-full bg-memorial-yellow origin-right"
-                  />
-                </motion.div>
-              )}
+              {/* Real-time Interactive Progress Bar */}
+              <div 
+                className="absolute bottom-0 right-0 left-0 h-6 flex items-end cursor-pointer group/progress z-20"
+                onClick={(e) => handleSeek(e, clip.id)}
+              >
+                <div className="w-full h-1 bg-white/5 relative">
+                  {playingId === clip.id && (
+                    <div 
+                      className="h-full bg-memorial-yellow transition-[width] duration-100 ease-linear absolute right-0"
+                      style={{ width: `${(currentTime / duration) * 100}%` }}
+                    >
+                      {/* Handle / Knob */}
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-memorial-yellow rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity shadow-[0_0_10px_rgba(212,175,55,0.8)]" />
+                    </div>
+                  )}
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
 
         {/* Hidden Global Audio Element for Clips */}
-        <audio ref={audioRef} hidden />
+        <audio ref={audioRef} />
       </div>
     </section>
   );
