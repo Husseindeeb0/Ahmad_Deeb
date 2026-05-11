@@ -65,33 +65,16 @@ function TimelineCard({
   entry: TimelineEntry;
   index: number;
 }) {
-  const cardRef = useRef<HTMLDivElement>(null);
   const isEven = index % 2 === 0;
 
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ["start end", "center center"],
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.5, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [80, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.92, 1]);
-  const imageX = useTransform(
-    scrollYProgress,
-    [0, 1],
-    isEven ? [-60, 0] : [60, 0],
-  );
-  const textX = useTransform(
-    scrollYProgress,
-    [0, 1],
-    isEven ? [60, 0] : [-60, 0],
-  );
-
   return (
-    <div ref={cardRef} className="relative py-16 md:py-24">
+    <div className="relative py-16 md:py-24">
       {/* Year marker — centered on the timeline line */}
       <motion.div
-        style={{ opacity, scale }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ margin: "-100px" }}
+        transition={{ duration: 1, ease: "easeOut" }}
         className="flex justify-center mb-12"
       >
         <div className="relative">
@@ -112,7 +95,13 @@ function TimelineCard({
         } items-center gap-8 md:gap-16 max-w-6xl mx-auto px-6`}
       >
         {/* Image side */}
-        <motion.div style={{ opacity, x: imageX }} className="w-full md:w-1/2">
+        <motion.div 
+          initial={{ opacity: 0, x: isEven ? -60 : 60 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ margin: "-150px" }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="w-full md:w-1/2"
+        >
           <div className="relative group">
             {/* Image glow backdrop */}
             <div className="absolute -inset-4 bg-memorial-green/10 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -132,16 +121,17 @@ function TimelineCard({
 
         {/* Text side */}
         <motion.div
-          style={{ opacity, x: textX, y }}
+          initial={{ opacity: 0, x: isEven ? 60 : -60, y: 30 }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          viewport={{ margin: "-150px" }}
+          transition={{ duration: 1.2, delay: 0.2, ease: "easeOut" }}
           className="w-full md:w-1/2"
         >
           <div
             className={`${isEven ? "md:text-right" : "md:text-left"} text-center`}
           >
             {/* Decorative accent line */}
-            <motion.div
-              style={{ opacity }}
-              className={`w-16 h-px bg-memorial-yellow/50 mb-6 ${
+            <div className={`w-16 h-px bg-memorial-yellow/50 mb-6 ${
                 isEven ? "md:mr-0 md:ml-auto" : "md:ml-0 md:mr-auto"
               } mx-auto`}
             />
@@ -155,9 +145,7 @@ function TimelineCard({
             </p>
 
             {/* Bottom decorative element */}
-            <motion.div
-              style={{ opacity }}
-              className={`mt-8 flex items-center gap-3 ${
+            <div className={`mt-8 flex items-center gap-3 ${
                 isEven
                   ? "md:justify-end justify-center"
                   : "md:justify-start justify-center"
@@ -166,7 +154,7 @@ function TimelineCard({
               <div className="w-2 h-2 rounded-full bg-memorial-yellow/30" />
               <div className="w-1.5 h-1.5 rounded-full bg-memorial-yellow/20" />
               <div className="w-1 h-1 rounded-full bg-memorial-yellow/10" />
-            </motion.div>
+            </div>
           </div>
         </motion.div>
       </div>
